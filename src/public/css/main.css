@@ -1,0 +1,41 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+#map-template {
+    height: 1080px;
+    width: 100%;
+    z-index: 1;
+    position: relative;
+}
+#box{
+    /*
+    right: 20px;
+    top: 20px;
+    position: absolute;*/
+    width: 100%;
+}
+
+#DateSelect{
+}
+
+#sidebarLabel{
+    /*position: absolute;
+    color: white;
+    left: 1%;*/
+    margin-left: 10px;
+    text-align: left;
+    font-size: 86%;
+}
+
+/*
+#container{
+    position: absolute;
+    padding: 0;
+    top: 36%;
+    left: 0;
+    font-family: 'Trebuchet MS', sans-serif;
+    width: 40%;
+}*/
+
