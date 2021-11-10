@@ -174,7 +174,9 @@ socket.on('Link', (res) => {
         L.control.layers(baseMaps, overlayMaps).addTo(map);
     }
 });
-
+socket.on('test', (res) => {
+    console.log(res);
+});
 
 var lineCharData = async ( seriesData) => {
     Highcharts.chart('container', {
