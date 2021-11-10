@@ -13,6 +13,10 @@ module.exports = (io) => {
             getNO2Layer(Dates);
         })
 
+        socket.on('test1', arg => {         
+            testFunction(arg);
+        })
+
         function getNO2Layer(arg) {
             return new bbPromise(function(resolve, reject) {
                 var process = spawn('myenv/bin/python3', ["src/Mapviz.py", JSON.stringify(arg)]);
@@ -76,7 +80,7 @@ module.exports = (io) => {
             });
         }
 
-        function getNO2Data(arg) {
+        function testFunction(arg) {
             console.log(arg)
             return new bbPromise(function(resolve, reject) {
                 var process = spawn('myenv/bin/python3', ["src/test.py", JSON.stringify(arg)]);

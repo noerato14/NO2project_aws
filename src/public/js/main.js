@@ -174,6 +174,9 @@ socket.on('Link', (res) => {
         L.control.layers(baseMaps, overlayMaps).addTo(map);
     }
 });
+
+socket.emit('test1',{msg: "gaa"})
+
 socket.on('test', (res) => {
     console.log(res);
 });
