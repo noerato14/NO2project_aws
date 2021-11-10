@@ -65,6 +65,7 @@ module.exports = (io) => {
                         
                     } catch(error) {
                         console.error(error);
+                        resultData.error = error;
                         resultData.success = false;
                     }
                     socket.emit('markerInfo', resultData);
