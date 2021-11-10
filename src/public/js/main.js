@@ -48,7 +48,7 @@ var layerGroup = L.layerGroup().addTo(map);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-map.locate({enableHighAccuracy: true});
+//map.locate({enableHighAccuracy: true});
 
 /*
 map.on('locationfound', e => {
@@ -156,6 +156,7 @@ function UpdtMap(){
 }
 
 socket.on('Link', (res) => {
+    console.log(res)
     if (res.success){
         map.eachLayer(function (layer) {
             map.removeLayer(layer);
