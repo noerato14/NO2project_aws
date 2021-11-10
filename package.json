@@ -2,9 +2,9 @@
   "name": "no2project",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "src/app.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/app.js"
   },
   "author": "Noe Salvatierra",
   "license": "ISC",

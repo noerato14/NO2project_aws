@@ -15,7 +15,7 @@ app.set('views', path.join(__dirname,'views'));
 
 
 // routes
-app.use(require('./routes/'));
+app.use(require('./routes'));
 
 // sockets
 require('./sockets')(io);
