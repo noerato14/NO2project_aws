@@ -9,6 +9,7 @@ var startDate = '2021-01-01';
 var endDate = todayDate;
 var lat = 0;
 var lng = 0;
+
 async function getMeasurements(lat, lng) {
     const msg = {
         lat: lat,
@@ -23,6 +24,7 @@ async function getMeasurements(lat, lng) {
 var slider = document.getElementById("timeSlider");
 var labelSlider = document.getElementById("labelSlider");
 labelSlider.innerHTML = slider.value;
+
 slider.oninput = function() {
     labelSlider.innerHTML = this.value;
     if (slider.value == currDate.getFullYear()){
@@ -48,6 +50,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 map.locate({enableHighAccuracy: true});
 
+/*
 map.on('locationfound', e => {
     if (isAvailable) {
 
@@ -64,7 +67,7 @@ map.on('locationfound', e => {
         isAvailable = false;
         slider.disabled = true;
     }
-});
+});*/
 
 
 
