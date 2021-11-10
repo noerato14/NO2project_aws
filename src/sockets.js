@@ -45,6 +45,7 @@ module.exports = (io) => {
         }
 
         function getNO2Data(arg) {
+            console.log(arg)
             return new bbPromise(function(resolve, reject) {
                 var process = spawn('myenv/bin/python3', ["src/app.py", JSON.stringify(arg)]);
                 resultString = '';
