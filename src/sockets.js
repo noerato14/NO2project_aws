@@ -79,37 +79,5 @@ module.exports = (io) => {
                 });
             });
         }
-
-        function testFunction(arg) {
-            console.log(arg)
-            return new bbPromise(function(resolve, reject) {
-                var process = spawn('myenv/bin/python3', ["src/test.py", JSON.stringify(arg)]);
-                resultString = '';
-        
-                process.stdout.on('data', function(data) {
-                    resultString += data.toString();
-                });
-        
-                process.stderr.on('data', function(err) {
-                    reject(err.toString());
-                });
-                process.stderr.on('end', () => {
-                    let resultData ={};;
-                    try {
-                        resultData = JSON.parse(resultString);
-                        resultData.success = true;
-                        
-                    } catch(error) {
-                        console.error(error);
-                        resultData.error = error;
-                        resultData.success = false;
-                    }
-                    socket.emit('test', resultData);
-                });
-                process.on('exit', function() {
-                    resolve();
-                });
-            });
-        }
     });
 }

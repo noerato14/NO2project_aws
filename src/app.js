@@ -3,6 +3,7 @@ const engine = require('ejs-mate');
 const path = require('path');
 const socketIO = require('socket.io');
 const http =require('http');
+const config = require('../config.js');
 
 // initialization
 const app = express();
@@ -24,7 +25,13 @@ require('./sockets')(io);
 // stactic files
 app.use(express.static(path.join(__dirname,'public')));
 
+
+const PORT = config.PORT;
+const HOST = config.HOST;
 // starting the server
+server.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`)
+/*
 server.listen(process.env.PORT || 3000, () => {
     console.log('Server on port ' + (process.env.PORT ||3000) );
-})
+})*/

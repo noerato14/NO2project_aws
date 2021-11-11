@@ -175,11 +175,6 @@ socket.on('Link', (res) => {
     }
 });
 
-socket.emit('test1',{msg: "gaa"})
-
-socket.on('test', (res) => {
-    console.log(res);
-});
 
 var lineCharData = async ( seriesData) => {
     Highcharts.chart('container', {
