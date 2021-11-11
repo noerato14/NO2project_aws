@@ -24,6 +24,9 @@ async function getMeasurements(lat, lng) {
 var slider = document.getElementById("timeSlider");
 var labelSlider = document.getElementById("labelSlider");
 var select = document.getElementById('DateSelect');
+var loader = document.getElementById('spinLoader');
+loader.style.display = "none";
+
 labelSlider.innerHTML = slider.value;
 
 slider.oninput = function() {
@@ -39,6 +42,7 @@ slider.oninput = function() {
         endDate = this.value + '-12-31';
     }
     getMeasurements(lat, lng)
+	loader.style.display = "block";
 }
 
 var map = L.map('map-template').setView([-12.046374, -77.042793], 13)
@@ -63,6 +67,7 @@ var layerGroup = L.layerGroup().addTo(map);
 
 var DateDict = {Start: '2021-10-01', End:'2021-10-15'}
 console.log("cargando primera capa")
+loader.style.display = "block";
 socket.emit('Mapviz', DateDict)
 select.disabled = true;
 slider.disabled = true;
@@ -89,7 +94,7 @@ map.on('locationfound', e => {
         select.disabled = true;
         slider.disabled = true;
         isAvailable = false;
-
+	loader.style.display = "block";
     }
 });
 
@@ -108,7 +113,7 @@ map.on('click', function(e) {
         select.disabled = true;
         slider.disabled = true;
         isAvailable = false;
-
+	loader.style.display = "block";
     }
 });
 
@@ -120,7 +125,7 @@ socket.on('markerInfo', (res) => {
 	select.disabled = false;
         slider.disabled = false;
         isAvailable = true;
-
+	loader.style.display = "none";
 })
 
 
@@ -182,6 +187,7 @@ function UpdtMap(){
 	select.disabled = true;
 	slider.disabled = true;
 	isAvailable = false;
+	loader.style.display = "block";
 }
 
 socket.on('Link', (res) => {
@@ -202,6 +208,7 @@ socket.on('Link', (res) => {
         //    "Map": map,
         //}
     }
+	loader.style.display = "none";
 });
 
 
