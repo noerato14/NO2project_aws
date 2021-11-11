@@ -1,3 +1,4 @@
+
 var spawn = require('child_process').spawn;  
 var bbPromise = require('bluebird');
 
@@ -13,13 +14,10 @@ module.exports = (io) => {
             getNO2Layer(Dates);
         })
 
-        socket.on('test1', arg => {         
-            testFunction(arg);
-        })
 
         function getNO2Layer(arg) {
             return new bbPromise(function(resolve, reject) {
-                var process = spawn('myenv/bin/python3', ["src/Mapviz.py", JSON.stringify(arg)]);
+                var process = spawn('python3', ["src/Mapviz.py", JSON.stringify(arg)]);
                 resultString = '';
         
                 process.stdout.on('data', function(data) {
@@ -49,9 +47,9 @@ module.exports = (io) => {
         }
 
         function getNO2Data(arg) {
-            console.log(arg)
+            console.log("hello1")
             return new bbPromise(function(resolve, reject) {
-                var process = spawn('myenv/bin/python3', ["src/app.py", JSON.stringify(arg)]);
+                var process = spawn('python3', ["src/app.py", JSON.stringify(arg)]);
                 resultString = '';
         
                 process.stdout.on('data', function(data) {
@@ -62,7 +60,9 @@ module.exports = (io) => {
                     reject(err.toString());
                 });
                 process.stderr.on('end', () => {
-                    let resultData ={};;
+                    let resultData ={};
+		
+		console.log(resultString);
                     try {
                         resultData = JSON.parse(resultString);
                         resultData.success = true;

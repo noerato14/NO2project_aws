@@ -54,6 +54,7 @@ newData = getMeasurements(lng, lat, startDate, endDate)
 
 #for i in range(len(newData)):
 #    print(newData[i])
+#res = {'timeseries': [1, 0.0001]}
 
 res = {'timeseries': newData}
 print(json.dumps(res))

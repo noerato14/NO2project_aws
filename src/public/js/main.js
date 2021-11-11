@@ -23,6 +23,7 @@ async function getMeasurements(lat, lng) {
 
 var slider = document.getElementById("timeSlider");
 var labelSlider = document.getElementById("labelSlider");
+var select = document.getElementById('DateSelect');
 labelSlider.innerHTML = slider.value;
 
 slider.oninput = function() {
@@ -40,17 +41,38 @@ slider.oninput = function() {
     getMeasurements(lat, lng)
 }
 
-
 var map = L.map('map-template').setView([-12.046374, -77.042793], 13)
+var openstreet = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png');
+openstreet.addTo(map);
+var no2Map= L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+var baseMaps = {
+	"Map": openstreet,
+};
+
+var overlayMaps = {
+	"NO2 layer": no2Map
+};
+L.control.layers(baseMaps, overlayMaps).addTo(map);
+
 const socket = io();
 var isAvailable = true;
 var layerGroup = L.layerGroup().addTo(map);
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-//map.locate({enableHighAccuracy: true});
 
-/*
+var DateDict = {Start: '2021-10-01', End:'2021-10-15'}
+console.log("cargando primera capa")
+socket.emit('Mapviz', DateDict)
+select.disabled = true;
+slider.disabled = true;
+isAvailable = false;
+
+//L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+map.locate({enableHighAccuracy: true});
+
+
 map.on('locationfound', e => {
     if (isAvailable) {
 
@@ -64,10 +86,12 @@ map.on('locationfound', e => {
         marker.bindPopup('Tu ubicación actual');
         map.addLayer(marker);
         getMeasurements(e.latlng.lat, e.latlng.lng);
-        isAvailable = false;
+        select.disabled = true;
         slider.disabled = true;
+        isAvailable = false;
+
     }
-});*/
+});
 
 
 
@@ -81,19 +105,22 @@ map.on('click', function(e) {
         const marker = L.marker(coords).addTo(map);
         marker.addTo(layerGroup);
         getMeasurements(e.latlng.lat, e.latlng.lng);
-        isAvailable = false;
+        select.disabled = true;
         slider.disabled = true;
+        isAvailable = false;
+
     }
 });
 
 socket.on('markerInfo', (res) => {
-    console.log(res)
     if (res.success){
         lineCharData(res.timeseries);
     }
     
-    isAvailable = true;
-    slider.disabled = false;
+	select.disabled = false;
+        slider.disabled = false;
+        isAvailable = true;
+
 })
 
 
@@ -138,7 +165,6 @@ function options() {
 options();
 
 function UpdtMap(){
-    var select = document.getElementById('DateSelect');
     var option = select.options[select.selectedIndex];
     var StartDate = option.value
     var date = new Date(StartDate)
@@ -153,25 +179,28 @@ function UpdtMap(){
     var DateDict = {Start: StartDate, End:EndDate}
     console.log(DateDict)
     socket.emit('Mapviz', DateDict)
+	select.disabled = true;
+	slider.disabled = true;
+	isAvailable = false;
 }
 
 socket.on('Link', (res) => {
-    console.log(res)
-    if (res.success){
-        map.eachLayer(function (layer) {
-            map.removeLayer(layer);
-        });
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        console.log(res.Link)
+   	select.disabled = false;
+	slider.disabled = false;
+	isAvailable = true;
+   
+ if (res.success){
+        //map.eachLayer(function (layer) {
+          //map.removeLayer(layer);
+        //});
+	map.removeLayer(no2Map);
+        //L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
         var link = res.Link;
-        var no2Map = L.tileLayer(link.toString()).addTo(map);
-        var baseMaps = {
-            "Map": map,
-        };
-        var overlayMaps = {
-            "NO2 layer": no2Map
-        };
-        L.control.layers(baseMaps, overlayMaps).addTo(map);
+        no2Map = L.tileLayer(link.toString()).addTo(map);
+        //var baseMaps = {
+        //    "Map": map,
+        //}
     }
 });
 

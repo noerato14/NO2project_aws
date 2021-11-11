@@ -20,7 +20,7 @@ app.use(require('./routes'));
 
 // sockets
 require('./sockets')(io);
-
+console.log(__dirname)
 
 // stactic files
 app.use(express.static(path.join(__dirname,'public')));
