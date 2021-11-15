@@ -17,7 +17,7 @@ module.exports = (io) => {
 
         function getNO2Layer(arg) {
             return new bbPromise(function(resolve, reject) {
-                var process = spawn('python3', ["src/Mapviz.py", JSON.stringify(arg)]);
+                var process = spawn('node', ["src/Mapviz.js", JSON.stringify(arg)]);
                 resultString = '';
         
                 process.stdout.on('data', function(data) {
@@ -47,9 +47,8 @@ module.exports = (io) => {
         }
 
         function getNO2Data(arg) {
-            console.log("hello1")
             return new bbPromise(function(resolve, reject) {
-                var process = spawn('python3', ["src/app.py", JSON.stringify(arg)]);
+                var process = spawn('node', ["src/getData.js", JSON.stringify(arg)]);
                 resultString = '';
         
                 process.stdout.on('data', function(data) {
@@ -61,8 +60,6 @@ module.exports = (io) => {
                 });
                 process.stderr.on('end', () => {
                     let resultData ={};
-		
-		console.log(resultString);
                     try {
                         resultData = JSON.parse(resultString);
                         resultData.success = true;

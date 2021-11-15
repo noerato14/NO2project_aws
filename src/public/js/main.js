@@ -23,7 +23,9 @@ async function getMeasurements(lat, lng) {
 
 var slider = document.getElementById("timeSlider");
 var labelSlider = document.getElementById("labelSlider");
-var select = document.getElementById('DateSelect');
+var select = document.getElementById('Year');
+var select2 = document.getElementById('Month');
+var button = document.getElementById('button');
 var loader = document.getElementById('spinLoader');
 loader.style.display = "none";
 
@@ -70,6 +72,8 @@ console.log("cargando primera capa")
 loader.style.display = "block";
 socket.emit('Mapviz', DateDict)
 select.disabled = true;
+select2.disabled = true;
+button.disabled = true;
 slider.disabled = true;
 isAvailable = false;
 
@@ -92,9 +96,11 @@ map.on('locationfound', e => {
         map.addLayer(marker);
         getMeasurements(e.latlng.lat, e.latlng.lng);
         select.disabled = true;
+        select2.disabled = true;
+        button.disabled = true;
         slider.disabled = true;
         isAvailable = false;
-	loader.style.display = "block";
+	    loader.style.display = "block";
     }
 });
 
@@ -111,9 +117,11 @@ map.on('click', function(e) {
         marker.addTo(layerGroup);
         getMeasurements(e.latlng.lat, e.latlng.lng);
         select.disabled = true;
+        select2.disabled = true;
+        button.disabled = true;
         slider.disabled = true;
         isAvailable = false;
-	loader.style.display = "block";
+	    loader.style.display = "block";
     }
 });
 
@@ -123,75 +131,134 @@ socket.on('markerInfo', (res) => {
     }
     
 	select.disabled = false;
-        slider.disabled = false;
-        isAvailable = true;
+    select2.disabled = false;
+    button.disabled = false;
+    slider.disabled = false;
+    isAvailable = true;
 	loader.style.display = "none";
 })
 
 
-function options() {
-    var elm = document.getElementById('DateSelect'),
+function Years() {
+    var elm = document.getElementById('Year'),
     df = document.createDocumentFragment();
     var startDate = new Date("2018/7/30")
     var today = new Date();
     var loop = new Date(startDate);
-    var i = 0
     while(loop < today) {
-    	
-  		var day1 = loop.getDate();
-        if(day1 < 10){day1 = '0' + day1}
-        var month1 = loop.getMonth();
-        if(month1 < 10){month1 = '0' + month1}
-        if(month1.toString() == '00'){month1 = '12'} 
-        var year1 = loop.getFullYear();
-    
-
-        let newDate = loop.setDate(loop.getDate() + 14);
-        loop = new Date(newDate);
-        var newDate1 = new Date(newDate);
-        var day2 = newDate1.getDate();
-        if(day2 < 10){day2 = '0' + day2}
-        var month2 = newDate1.getMonth();
-        if(month2 < 10){month2 = '0' + month2}
-        if(month2.toString() == '00'){month2 = '12'} 
-        var year2 = newDate1.getFullYear();
-        
-        var optionLabel1 = year1 + '-'+month1+'-'+day1;
-        var optionLabel2 = year2 + '-'+month2+'-'+day2;
+  		var year = loop.getFullYear();        
+        var optionLabel1 = year;
         var option = document.createElement('option');
         option.value = optionLabel1.toString()
-        option.appendChild(document.createTextNode(optionLabel1+' - '+optionLabel2));
+        option.appendChild(document.createTextNode(optionLabel1));
+        df.appendChild(option);
+        let newDate = loop.setDate(loop.getDate() + 365);
+        loop = new Date(newDate);
+    }
+    elm.appendChild(df);
+}
+Years();
+var months = {0:"Ene",1:"Feb",2:"Mar",3:"Abr",
+              4:"May",5:"Jun",6:"Jul",7:"Ago",
+              8:"Sep",9:"Oct",10:"Nov",11:"Dic"}
+var months2 = {0:"01",1:"02",2:"03",3:"04",
+              4:"05",5:"06",6:"07",7:"08",
+              8:"09",9:"10",10:"11",11:"00"}
+
+function MonthInit() {
+    var elm = document.getElementById('Month'),
+    df = document.createDocumentFragment();
+    for(let i = 6; i < 12; i++){
+        var optionLabel1 = months[i];
+        var option = document.createElement('option');
+        option.value = optionLabel1.toString()
+        option.appendChild(document.createTextNode(optionLabel1));
+        df.appendChild(option);
+        
+    }
+    elm.appendChild(df);
+}
+MonthInit();
+
+
+function removeOptions(selectElement) {
+    var i, L = selectElement.options.length - 1;
+    for(i = L; i >= 0; i--) {
+       selectElement.remove(i);
+    }
+ }
+ 
+function MonthSelect() {
+    var elm = document.getElementById('Month'),
+    df = document.createDocumentFragment();
+    var elm2 = document.getElementById('Year');
+    var yearSel = elm2.value
+    var init_value = 0;
+    var end__value = months.length;
+    var date = new Date();
+    var month = date.getMonth();   
+    date = date.getFullYear();
+    if(yearSel.toString() == "2018"){
+        init_value = 6;
+        end__value = 12;
+    }
+    else if(yearSel.toString() == date.toString()){
+        init_value = 0;
+        end__value = months2[month.toString()]-1;
+    }
+    else if(yearSel.toString != "2018" || yearSel.toString != date.toString()){
+        init_value = 0;
+        end__value = 12;
+    }
+    
+    // using the function:
+    removeOptions(elm);
+    for(let i = init_value; i < end__value; i++){
+        var optionLabel1 = months[i];
+        var option = document.createElement('option');
+        option.value = optionLabel1.toString()
+        option.appendChild(document.createTextNode(optionLabel1));
         df.appendChild(option);
         
     }
     elm.appendChild(df);
 }
 
-options();
 
-function UpdtMap(){
-    var option = select.options[select.selectedIndex];
-    var StartDate = option.value
-    var date = new Date(StartDate)
-    var EndDate = date.setDate(date.getDate() + 14);
-    var EndDate = new Date(EndDate);
-    var day2 = EndDate.getDate();
-    if(day2 < 10){day2 = '0' + day2}
-    var month2 = EndDate.getMonth()+1;
-    if(month2 < 10){month2 = '0' + month2}
-    var year2 = EndDate.getFullYear();   
-    var EndDate = year2 + '-'+month2+'-'+day2;
-    var DateDict = {Start: StartDate, End:EndDate}
-    console.log(DateDict)
-    socket.emit('Mapviz', DateDict)
-	select.disabled = true;
-	slider.disabled = true;
-	isAvailable = false;
-	loader.style.display = "block";
+function DateSel(){
+    if(isAvailable){
+        var nums = {"Ene":"01","Feb":"02","Mar":"03","Abr":"04",
+                    "May":"05","Jun":"06","Jul":"07","Ago":"08",
+                    "Sep":"09","0ct":"10","Nov":"11","Dic":"12"}
+
+        var Year = document.getElementById('Year').value;
+        var Month = document.getElementById('Month').value;
+        var m = Month.toString()
+        var StartDate = Year.toString() + '-' + nums[m] + '-' + "01"
+        var Mdays = 0;
+        if(m == "Ene" ||m == "Mar" ||m == "May" ||m == "Jul" ||m == "Ago" || m == "Oct" ||m == "Dic")
+            Mdays = 31;
+        else if(m == "Nov" || m == "Abr" || m == "Jun" ||m == "Sep")
+            Mdays = 30;
+        else if(m == "Feb")
+            Mdays = 28;
+        var EndDate = Year.toString() + '-' + nums[m] + '-' + Mdays.toString();
+        var DateDict = {Start: StartDate, End:EndDate}
+        console.log(DateDict)
+        socket.emit('Mapviz', DateDict)
+        select.disabled = true;
+        select2.disabled = true;
+        button.disabled = true;
+        slider.disabled = true;
+        isAvailable = false;
+        loader.style.display = "block";    
+    }
 }
 
 socket.on('Link', (res) => {
-   	select.disabled = false;
+    select.disabled = false;
+    select2.disabled = false;
+    button.disabled = false;
 	slider.disabled = false;
 	isAvailable = true;
    

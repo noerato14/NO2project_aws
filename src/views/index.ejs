@@ -26,8 +26,10 @@
         <div class="text"> UTEC NO2 Project</div>
         <br>
         <div>
-            <label class="sidebarLabel" for="DateSelect">Rango del Mapa</label>  
-            <select id="DateSelect" onChange="UpdtMap()"></select>
+            <label class="sidebarLabel" for="DateSelect">Rango del Mapa</label> 
+            <select id="Year" onChange="MonthSelect()"></select>
+            <select id="Month"></select> 
+            <button id="button" type="button" onClick="DateSel()">Ingresar</button>
         </div>
         <br>
         <div>
